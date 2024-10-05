@@ -1,28 +1,31 @@
-image: Ubuntu2204  # образ для сборки
+name: GitHub Pages
 
-stack: node 20  # окружение
+on:
+  push:
+    branches:
+      - main
+git 
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
 
-branches:
-  only:
-    - master  # ветка git
-    - main
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
-cache: node_modules  # кеширование
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16'
 
-install:
-  - yarn  # команда установки зависимостей
+    - name: Install dependencies
+      run: npm install
 
-build: off  # отключаем встроенную в appveyor систему сборки
+    - name: Build project
+      run: npm run build
 
-build_script:
-  - yarn build   # команда сборки
-
-test_script:
-  - yarn lint && yarn test  # скрипт тестирования
-
-deploy_script:  # скрипт развёртывания
-  - git config --global credential.helper store
-  - git config --global user.name AppVeyor
-  - git config --global user.email ci@appveyor.com
-  - echo "https://$GITHUB_TOKEN:x-oauth-basic@github.com" > "$HOME/.git-credentials"
-  - npx gh-pages -d dist -u "appveyor-bot <ci@appveyor>"
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./dist
