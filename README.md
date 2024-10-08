@@ -1,1 +1,1 @@
-[Build and Deploy](https://github.com/Yahmice/DOM-hw/actions/workflows/gh-pages.yml/badge.svg)
+[Build and Deploy](https://github.com/Yahmice/DOM-hw/actions/workflows/web.yml/badge.svg)
